@@ -144,8 +144,8 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text("username"),
-            accountEmail: Text("username@gmail.com"),
+            accountName: Text(active_user),
+            accountEmail: Text("$active_user@gmail.com"),
           ),
           ListTile(
             title: const Text("Highscore"),
