@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HighScore extends StatefulWidget {
+  const HighScore({super.key});
+
   @override
-  _HighScoreState createState() => _HighScoreState();
+  State<HighScore> createState() => _HighScoreState();
 }
 
 class _HighScoreState extends State<HighScore> {

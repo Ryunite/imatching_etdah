@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:imatching_etdah/game.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:imatching_etdah/highscore.dart';
+import 'package:imatching_etdah/result.dart';
 import 'package:imatching_etdah/login.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 String active_user = "";
 
@@ -57,8 +61,10 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Layar Utama'),
       routes: {
+        'main': (context) => const MyHomePage(title: 'Layar Utama'),
         'game': (context) => const Game(),
-        'highscore': (context) => const Game(),
+        'result': (context) => const Result(),
+        'highscore': (context) => const HighScore(),
       },
     );
   }
@@ -119,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Text('IMatching ETdah'),
             Text('Description'),
             TextButton(
