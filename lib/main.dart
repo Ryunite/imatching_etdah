@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'IMatching ETdah'),
+      home: const MyHomePage(title: 'Layar Utama'),
       routes: {
         'game': (context) => const Game(),
         'highscore': (context) => const Game(),
@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             title: const Text("Highscore"),
-            leading: const Icon(Icons.inbox),
+            leading: const Icon(Icons.emoji_events),
             onTap: () {
               Navigator.pushNamed(context, "highscore");
             },
