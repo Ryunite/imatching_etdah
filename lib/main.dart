@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Layar Utama'),
       routes: {
-        'main': (context) => const MyHomePage(title: 'Layar Utama'),
+        'main': (context) => const MyApp(),
         'game': (context) => const Game(),
         'result': (context) => const Result(),
         'highscore': (context) => const HighScore(),
@@ -141,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pushNamed(context, "game");
                 });
               },
-              child: const Text('Start Game'),
+              child: const Text('Mulai Permainan'),
             ),
           ],
         ),
@@ -161,14 +161,14 @@ class _MyHomePageState extends State<MyHomePage> {
             accountEmail: Text("$active_user@gmail.com"),
           ),
           ListTile(
-            title: const Text("Highscore"),
+            title: const Text("Papan Peringkat"),
             leading: const Icon(Icons.emoji_events),
             onTap: () {
               Navigator.pushNamed(context, "highscore");
             },
           ),
           ListTile(
-            title: const Text("Logout"),
+            title: const Text("Keluar"),
             leading: const Icon(Icons.logout),
             onTap: () {
               doLogout();

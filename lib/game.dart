@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Game extends StatefulWidget {
@@ -30,6 +32,8 @@ class _GameState extends State<Game> {
     super.initState();
 
     startCountdownTimer();
+
+    items.shuffle();
 
     flipped = List.filled(items.length, false);
     flippedIndices = [];
