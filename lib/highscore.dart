@@ -10,46 +10,11 @@ class HighScore extends StatefulWidget {
 }
 
 class _HighScoreState extends State<HighScore> {
-  String _topUser = "No user";
-  int _topPoint = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadHighScore();
-  }
-
-  Future<void> _loadHighScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> highScores = prefs.getStringList('high_scores') ?? [];
-    // setState(() {
-    //   _topUser = prefs.getString('top_user') ?? "No user";
-    //   _topPoint = prefs.getInt('top_point') ?? 0;
-
-    // });
-  }
-
   Future<List<String>> getHighScores() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getStringList('high_scores') ?? [];
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(title: Text("High Score")),
-  //     body: Center(
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           Text("Top User: $_topUser", style: TextStyle(fontSize: 24)),
-  //           SizedBox(height: 10),
-  //           Text("Top Score: $_topPoint", style: TextStyle(fontSize: 24)),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +33,16 @@ class _HighScoreState extends State<HighScore> {
             itemCount: scores.length,
             itemBuilder: (context, index) {
               final parts = scores[index].split(':');
-              return ListTile(title: Text(parts[0]), trailing: Text(parts[1]));
+              return ListTile(
+                title: Row(
+                  children: [
+                    Text('${index + 1}. '),
+                    Expanded(flex: 2, child: Text(parts[0])),
+                    Spacer(),
+                    Text(parts[1]),
+                  ],
+                ),
+              );
             },
           );
         },
