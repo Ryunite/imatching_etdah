@@ -22,7 +22,7 @@ class _ResultState extends State<Result> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  Navigator.pushNamed(context, "game");
+                  Navigator.pushReplacementNamed(context, "game");
                 });
               },
               child: const Text('Ulangi permainan'),
@@ -38,7 +38,7 @@ class _ResultState extends State<Result> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  Navigator.pushNamed(context, "main");
+                  Navigator.pushReplacementNamed(context, "main");
                 });
               },
               child: const Text('Kembali ke halaman utama'),

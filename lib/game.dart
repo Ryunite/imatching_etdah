@@ -9,20 +9,53 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
-  List<int> levels = [1, 2, 2];
+  // Level ke-..., Vertical, Horizontal, Timer
+  List<int> levels = [1, 2, 2, 20];
   List<String> items = ['pikachu', 'pikachu', 'charizard', 'charizard'];
-  int opens = 0;
+
+  // Buat logic game
+  late List<bool> flipped;
+  late List<int> flippedIndices;
+  bool isAnimating = false;
   int points = 0;
 
-  late List<bool> flipped;
-  late List<int> flippedIndices; // Menyimpan index gambar yang dibuka
-  bool isAnimating = false; // Menandakan apakah sedang dalam animasi
+  // Buat timer
+  late Timer timer;
+  late int hitung = levels[3];
+  bool isActive = false;
 
   @override
   void initState() {
     super.initState();
+
+    startCountdownTimer();
+
     flipped = List.filled(items.length, false);
     flippedIndices = [];
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    points = 0;
+    hitung = 0;
+    super.dispose();
+  }
+
+  void startCountdownTimer() {
+    timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      setState(() {
+        if (hitung == 0) {
+          timer.cancel();
+          isActive = false;
+
+          Navigator.pushReplacementNamed(context, "result");
+        } else {
+          hitung--;
+          isActive = true;
+        }
+      });
+    });
   }
 
   void resetLevel(List<int> newLevel, List<String> newItems) {
@@ -32,14 +65,13 @@ class _GameState extends State<Game> {
       items.shuffle();
       flipped = List.filled(items.length, false);
       flippedIndices = [];
-      opens = 0;
       isAnimating = false;
+      hitung = levels[3];
     });
   }
 
   void handleTap(int index) {
     if (flipped[index] || isAnimating) {
-      // Tidak bisa mengklik jika gambar sudah terbuka atau sedang dalam animasi
       return;
     }
 
@@ -49,34 +81,31 @@ class _GameState extends State<Game> {
     });
 
     if (flippedIndices.length == 2) {
-      // Jika ada dua gambar yang terbuka
       setState(() {
-        isAnimating = true; // Mulai animasi, nonaktifkan interaksi
+        isAnimating = true;
       });
 
       if (items[flippedIndices[0]] != items[flippedIndices[1]]) {
-        // Jika kedua gambar tidak sama, tutup gambar setelah beberapa detik
         Future.delayed(const Duration(seconds: 1), () {
           setState(() {
             flipped[flippedIndices[0]] = false;
             flipped[flippedIndices[1]] = false;
             flippedIndices.clear();
-            isAnimating = false; // Selesai animasi, aktifkan interaksi
+            isAnimating = false;
           });
         });
       } else {
-        flippedIndices.clear(); // Jika cocok, kosongkan daftar flippedIndices
+        flippedIndices.clear();
         setState(() {
           points += 10;
-          opens += 2;
-          isAnimating = false; // Selesai animasi, aktifkan interaksi
+          isAnimating = false;
         });
       }
 
-      if (opens == items.length) {
+      if (flipped.every((item) => item)) {
         if (levels[0] == 1) {
           resetLevel(
-            [2, 2, 4],
+            [2, 2, 4, 40],
             [
               'pikachu',
               'pikachu',
@@ -90,7 +119,7 @@ class _GameState extends State<Game> {
           );
         } else if (levels[0] == 2) {
           resetLevel(
-            [3, 3, 4],
+            [3, 3, 4, 60],
             [
               'pikachu',
               'pikachu',
@@ -107,7 +136,7 @@ class _GameState extends State<Game> {
             ],
           );
         } else if (levels[0] == 3) {
-          Navigator.pushNamed(context, "result");
+          Navigator.pushReplacementNamed(context, "result");
         }
       }
     }
@@ -119,7 +148,20 @@ class _GameState extends State<Game> {
       appBar: AppBar(title: Text('Layar Game')),
       body: Column(
         children: [
-          Text('Level ${levels[0]}'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 24.0),
+                child: Text('Level ${levels[0]}'),
+              ),
+              Text('Point: $points'),
+              Padding(
+                padding: const EdgeInsets.only(left: 24.0),
+                child: Text('Timer: $hitung'),
+              ),
+            ],
+          ),
           Column(
             children: List.generate(
               levels[1],
@@ -186,7 +228,7 @@ class _GameState extends State<Game> {
           TextButton(
             onPressed: () {
               resetLevel(
-                [1, 2, 2],
+                [1, 2, 2, 20],
                 ['pikachu', 'pikachu', 'charizard', 'charizard'],
               );
             },
@@ -195,7 +237,7 @@ class _GameState extends State<Game> {
           TextButton(
             onPressed: () {
               resetLevel(
-                [2, 2, 4],
+                [2, 2, 4, 40],
                 [
                   'pikachu',
                   'pikachu',
@@ -213,7 +255,7 @@ class _GameState extends State<Game> {
           TextButton(
             onPressed: () {
               resetLevel(
-                [3, 3, 4],
+                [3, 3, 4, 60],
                 [
                   'pikachu',
                   'pikachu',
