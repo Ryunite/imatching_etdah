@@ -127,7 +127,14 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('IMatching ETdah'),
-            Text('Description'),
+            Divider(height: 10, color: Colors.transparent),
+            Text(
+              'Permainan IMatching ETdah adalah suatu permainan memory game dimana pemain harus memasangkan kartu-kartu yang terdapat di dalam permainan.',
+            ),
+            Text(
+              'Terdapat 3 tingkat kesulitan yaitu level 1 dengan ukuran tebakan 2x2, level 2 dengan ukuran tebakan 2x4, dan level 3 dengan ukuran tebakan 3x4.',
+            ),
+            Divider(height: 10, color: Colors.transparent),
             TextButton(
               onPressed: () {
                 setState(() {
