@@ -50,7 +50,7 @@ class _GameState extends State<Game> {
           timer.cancel();
           isActive = false;
 
-          GameOver();
+          gameOver();
           Navigator.pushReplacementNamed(context, "result");
         } else {
           hitung--;
@@ -60,14 +60,12 @@ class _GameState extends State<Game> {
     });
   }
 
-  void GameOver() async {
+  void gameOver() async {
     final prefs = await SharedPreferences.getInstance();
-    int topPoint = prefs.getInt('top_point') ?? 0;
     List<String> highScores = prefs.getStringList('high_scores') ?? [];
     String activeUser = prefs.getString('user_id') ?? "No User";
 
     await prefs.setInt('user_point', points);
-    // highScores.add('$activeUser:$points');
 
     List<List<String>> scorePairs =
         highScores
@@ -90,10 +88,6 @@ class _GameState extends State<Game> {
       (a, b) => int.parse(b[1].trim()).compareTo(int.parse(a[1].trim())),
     );
 
-    // scorePairs.removeWhere((pair) => pair[0] == activeUser);
-
-    // scorePairs.add([activeUser, points.toString()]);
-
     if (scorePairs.length > 5) {
       scorePairs = scorePairs.sublist(0, 5);
     }
@@ -102,11 +96,6 @@ class _GameState extends State<Game> {
         scorePairs.map((pair) => '${pair[0]}:${pair[1]}').toList();
 
     await prefs.setStringList('high_scores', updatedScores);
-
-    // if (points > topPoint && activeUser != null) {
-    //   await prefs.setInt('top_point', points);
-    //   await prefs.setString('top_user', activeUser);
-    // }
   }
 
   void resetLevel(List<int> newLevel, List<String> newItems) {
@@ -187,7 +176,7 @@ class _GameState extends State<Game> {
             ],
           );
         } else if (levels[0] == 3) {
-          GameOver();
+          gameOver();
           Navigator.pushReplacementNamed(context, "result");
         }
       }
