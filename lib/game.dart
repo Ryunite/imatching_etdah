@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -49,6 +50,7 @@ class _GameState extends State<Game> {
           timer.cancel();
           isActive = false;
 
+          GameOver();
           Navigator.pushReplacementNamed(context, "result");
         } else {
           hitung--;
@@ -56,6 +58,55 @@ class _GameState extends State<Game> {
         }
       });
     });
+  }
+
+  void GameOver() async {
+    final prefs = await SharedPreferences.getInstance();
+    int topPoint = prefs.getInt('top_point') ?? 0;
+    List<String> highScores = prefs.getStringList('high_scores') ?? [];
+    String activeUser = prefs.getString('user_id') ?? "No User";
+
+    await prefs.setInt('user_point', points);
+    // highScores.add('$activeUser:$points');
+
+    List<List<String>> scorePairs =
+        highScores
+            .map((entry) => entry.split(':'))
+            .where((pair) => pair.length == 2)
+            .toList();
+
+    int existingIndex = scorePairs.indexWhere((pair) => pair[0] == activeUser);
+
+    if (existingIndex != -1) {
+      int previousPoints = int.parse(scorePairs[existingIndex][1]);
+      if (points > previousPoints) {
+        scorePairs[existingIndex][1] = points.toString();
+      }
+    } else {
+      scorePairs.add([activeUser, points.toString()]);
+    }
+
+    scorePairs.sort(
+      (a, b) => int.parse(b[1].trim()).compareTo(int.parse(a[1].trim())),
+    );
+
+    // scorePairs.removeWhere((pair) => pair[0] == activeUser);
+
+    // scorePairs.add([activeUser, points.toString()]);
+
+    if (scorePairs.length > 5) {
+      scorePairs = scorePairs.sublist(0, 5);
+    }
+
+    List<String> updatedScores =
+        scorePairs.map((pair) => '${pair[0]}:${pair[1]}').toList();
+
+    await prefs.setStringList('high_scores', updatedScores);
+
+    // if (points > topPoint && activeUser != null) {
+    //   await prefs.setInt('top_point', points);
+    //   await prefs.setString('top_user', activeUser);
+    // }
   }
 
   void resetLevel(List<int> newLevel, List<String> newItems) {
@@ -136,6 +187,7 @@ class _GameState extends State<Game> {
             ],
           );
         } else if (levels[0] == 3) {
+          GameOver();
           Navigator.pushReplacementNamed(context, "result");
         }
       }
@@ -224,55 +276,6 @@ class _GameState extends State<Game> {
                 }),
               ),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              resetLevel(
-                [1, 2, 2, 20],
-                ['pikachu', 'pikachu', 'charizard', 'charizard'],
-              );
-            },
-            child: const Text('Ganti Level 1'),
-          ),
-          TextButton(
-            onPressed: () {
-              resetLevel(
-                [2, 2, 4, 40],
-                [
-                  'pikachu',
-                  'pikachu',
-                  'charizard',
-                  'charizard',
-                  'gengar',
-                  'gengar',
-                  'eevee',
-                  'eevee',
-                ],
-              );
-            },
-            child: const Text('Ganti Level 2'),
-          ),
-          TextButton(
-            onPressed: () {
-              resetLevel(
-                [3, 3, 4, 60],
-                [
-                  'pikachu',
-                  'pikachu',
-                  'charizard',
-                  'charizard',
-                  'gengar',
-                  'gengar',
-                  'eevee',
-                  'eevee',
-                  'snorlax',
-                  'snorlax',
-                  'garchomp',
-                  'garchomp',
-                ],
-              );
-            },
-            child: const Text('Ganti Level 3'),
           ),
         ],
       ),
