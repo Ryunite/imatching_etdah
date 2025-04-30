@@ -90,10 +90,6 @@ class _GameState extends State<Game> {
       (a, b) => int.parse(b[1].trim()).compareTo(int.parse(a[1].trim())),
     );
 
-    // scorePairs.removeWhere((pair) => pair[0] == activeUser);
-
-    // scorePairs.add([activeUser, points.toString()]);
-
     if (scorePairs.length > 5) {
       scorePairs = scorePairs.sublist(0, 5);
     }
@@ -102,11 +98,6 @@ class _GameState extends State<Game> {
         scorePairs.map((pair) => '${pair[0]}:${pair[1]}').toList();
 
     await prefs.setStringList('high_scores', updatedScores);
-
-    // if (points > topPoint && activeUser != null) {
-    //   await prefs.setInt('top_point', points);
-    //   await prefs.setString('top_user', activeUser);
-    // }
   }
 
   void resetLevel(List<int> newLevel, List<String> newItems) {
