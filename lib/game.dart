@@ -50,7 +50,7 @@ class _GameState extends State<Game> {
           timer.cancel();
           isActive = false;
 
-          GameOver();
+          gameOver();
           Navigator.pushReplacementNamed(context, "result");
         } else {
           hitung--;
@@ -60,14 +60,12 @@ class _GameState extends State<Game> {
     });
   }
 
-  void GameOver() async {
+  void gameOver() async {
     final prefs = await SharedPreferences.getInstance();
-    int topPoint = prefs.getInt('top_point') ?? 0;
     List<String> highScores = prefs.getStringList('high_scores') ?? [];
     String activeUser = prefs.getString('user_id') ?? "No User";
 
     await prefs.setInt('user_point', points);
-    // highScores.add('$activeUser:$points');
 
     List<List<String>> scorePairs =
         highScores
@@ -178,7 +176,7 @@ class _GameState extends State<Game> {
             ],
           );
         } else if (levels[0] == 3) {
-          GameOver();
+          gameOver();
           Navigator.pushReplacementNamed(context, "result");
         }
       }
